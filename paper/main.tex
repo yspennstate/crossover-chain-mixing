@@ -67,7 +67,7 @@ Let $K\ge2$ be even and $L\ge1$.
 
 The upper bound rests on the work of Czumaj \cite{Cz15} on random switching networks, whose layers are uniform random perfect matchings and whose switches are fair coins. Czumaj proved that almost every such network of logarithmic depth shuffles every $0$--$1$ vector almost uniformly; the theorem and the expansion property behind it are his. This paper reduces the crossover chain to these networks. Once the pairings are fixed, the letters in different positions are exchanged by independent coins, so the columns evolve independently, and each column is a $0$--$1$ vector pushed through the network formed by the pairings. Successive blocks of steps use independent pairings, and their networks are combined with the contraction coefficient of Dobrushin \cite{Do56}. The coupling of Aldous and Fill also treats the columns one at a time, but couples each column through its own unmatched words; replacing that coupling by Czumaj's theorem for the whole network of a block removes the factor $K$. Aldous and Fill had expected $\log K$ for a single column from the random transpositions shuffle of Diaconis and Shahshahani \cite{DS81}; Czumaj's theorem gives it.
 
-Averaged over the pairings, a single column is shuffled by exchanges between random pairs of positions with fresh random choices at every step. Czumaj and Kuty{\l}owski \cite{CK00} showed by delayed path coupling that a distributed shuffle of this kind generates a nearly uniform permutation of $n$ items in $\Theta(\log n)$ rounds. The columns of the crossover chain share their pairings, so a bound averaged over the pairings does not apply to them jointly, and the theorem of \cite{Cz15} for a fixed good network is needed. Infinite-population versions of recombination, in which the state is a distribution on $\{0,1\}^L$ evolving by a quadratic map, were studied by Rabani, Rabinovich and Sinclair \cite{RRS98} and by Caputo and Sinclair \cite{CS18}; the chain studied here is a finite population of $K$ words.
+Averaged over the pairings, a single column is shuffled by exchanges between random pairs of positions with fresh random choices at every step. Czumaj and Kuty{\l}owski \cite{CK00} showed by delayed path coupling that a distributed shuffle of this kind generates a nearly uniform permutation in a number of rounds of the order of the logarithm of the number of items. The columns of the crossover chain share their pairings, so a bound averaged over the pairings does not apply to them jointly, and the theorem of \cite{Cz15} for a fixed good network is needed. Infinite-population versions of recombination, in which the state is a distribution on $\{0,1\}^L$ evolving by a quadratic map, were studied by Rabani, Rabinovich and Sinclair \cite{RRS98} and by Caputo and Sinclair \cite{CS18}; the chain studied here is a finite population of $K$ words.
 
 Section~\ref{sec:upper} proves Theorem~\ref{thm:upper} and Section~\ref{sec:lower} proves Theorem~\ref{thm:lower}. Appendix~\ref{app:notation} lists the notation.
 
@@ -177,10 +177,9 @@ Let $A=\{|F-q|\ge\Delta/2\}$. Under $U_m$, Chebyshev's inequality gives $U_m(A)\
 
 For fixed $K\ge4$, part (b) and Theorem~\ref{thm:upper} together show that $\tau_1^{\mathrm{disc}}/\log L$ stays between two positive constants depending on $K$ as $L\to\infty$.
 
-\section*{Acknowledgments}
+\section*{Acknowledgements and funding}
 This work was done by AI agents, Claude (Anthropic) and Codex (OpenAI), connected to Math Brain \cite{MathBrainRepo,MathBrainPaper} and working inside the Brain framework \cite{BrainFramework}. The question came from the list of open problems that these agents maintain.
 
-\section*{Funding}
 The research presented in this paper was supported by the European Research
 Council (ERC) under the European Union's Horizon Europe research and
 innovation programme (grant agreement No.~101041711), by the Simons
@@ -220,18 +219,18 @@ $X_t$, $\Pm_x$, $\E$ & the chain at time $t$; its law from $x$; expectation & Se
 $\TV$, $\mu$, $\mu'$ & total variation distance; two probability measures & \eqref{eq:d}\\
 $d(t)$, $\bar d(t)$, $\tau_1^{\mathrm{disc}}$ & distance to $U_m$; distance between two starts; the variation threshold & \eqref{eq:d}\\
 $\varepsilon$, $C$ & a target distance; an absolute constant & Theorem~\ref{thm:upper}\\
-$\pi_k$, $N_k$, $\sigma(M)$ & the permutation of step $k$; its matching; the image of a matching & Section~\ref{sec:upper}, par.~1\\
+$N_k$, $\pi_k$, $\sigma(M)$ & the matching of step $k$; the permutation of step $k$; the image of a matching & Section~\ref{sec:upper}, par.~1\\
 $s$, $\Omega_s$, $u_s$ & a number of ones; $0$--$1$ vectors with $s$ ones; the uniform law on them & Section~\ref{sec:upper}, par.~2\\
 $P_M$, $\mathbf M$, $P_{\mathbf M}$ & one exchange step for matching $M$; a sequence of matchings; the product along it & Section~\ref{sec:upper}, par.~2\\
-$Q_\sigma$ & moving entries by a permutation $\sigma$ & \eqref{eq:conj}\\
+$Q_\sigma$ & moving entries by a permutation $\sigma$ & Section~\ref{sec:upper}, par.~2\\
 $\lambda_l$, $\sigma_k$, $\theta_k$, $M_k$ & law of the $l$th column given $\pi_1,\dots,\pi_t$; $\pi_k^{-1}$; $\sigma_k\circ\dots\circ\sigma_1$; the matching $\theta_{k-1}^{-1}(N_k)$ & proof of Lemma~\ref{lem:columns}\\
-$\delta$, $\delta_s$ & Dobrushin coefficient; the same on $\Omega_s$ & Section~\ref{subsec:blocks}\\
+$\delta_y$, $\delta$, $\delta_s$ & the point mass at $y$; Dobrushin coefficient; the same on $\Omega_s$ & Lemma~\ref{lem:columns}; Section~\ref{subsec:blocks}\\
 $T$, $r$, $t'$, $\mathbf M^{(b)}$, $\mathbf M'$ & block length; number of blocks; remainder; the $b$th block; the remainder block & Section~\ref{subsec:blocks}\\
 $\rho_K(T)$ & largest mean Dobrushin coefficient of a block & \eqref{eq:rho}\\
 $n$, $c$, $c_1$, $k$, $\alpha$ & Czumaj's network size, depth constant and error exponent; a number of zeros; its least proportion & Section~\ref{subsec:networks}\\
-$c_0$, $C_0$, $K_0$, $T_K$ & constants of Lemma~\ref{lem:rho}; the block length $\lceil c_0\log K\rceil$ & Lemma~\ref{lem:rho}\\
+$c_0$, $C_0$, $K_0$, $T_K$ & three absolute constants; the block length $\lceil c_0\log K\rceil$ & Section~\ref{subsec:networks}, Lemma~\ref{lem:rho}\\
 $F_j$, $\omega$, $\omega^*$, $\tau_i$ & a $1$-factorization of the complete graph; vectors in $\Omega_s$; transpositions & proof of Lemma~\ref{lem:rho}\\
-$L'$, $S_i$, $N$ & $\min(K,L)$; words that can hold a letter of word $1$ after $i$ steps; number of words carrying a $1$ & proof of Theorem~\ref{thm:lower}(a)\\
+$S_i$, $L'$, $N$ & words that can hold a letter of word $1$ after $i$ steps; $\min(K,L)$; number of words carrying a $1$ & proof of Theorem~\ref{thm:lower}(a)\\
 $Y_l$, $F$, $p$, $q$, $\Delta$, $A$ & indicators; their mean; its conditional and uniform means; the gap; the test event & proof of Theorem~\ref{thm:lower}(b)\\\bottomrule
 \end{tabular}
 \end{center}
@@ -254,7 +253,7 @@ $Y_l$, $F$, $p$, $q$, $\Delta$, $A$ & indicators; their mean; its conditional an
 
 \bibitem{MathBrainRepo} Y.~Shmalo, \emph{Math Brain: public snapshot, code and tests}, 2026, \url{https://github.com/yspennstate/math-brain-public/tree/5740d6238014124ca7137b6f9e9d056739890725}.
 
-\bibitem{MathBrainPaper} Y.~Shmalo, \emph{Math Brain: shared, auditable memory for multi-agent mathematical research}, October 2026, \url{https://github.com/yspennstate/math-brain-public/tree/5740d6238014124ca7137b6f9e9d056739890725/papers/math-brain-2026-10-24}.
+\bibitem{MathBrainPaper} Y.~Shmalo, \emph{Math Brain: shared, auditable memory for multi-agent mathematical research}, October 2026, \url{https://github.com/yspennstate/math-brain-public/tree/main/papers/math-brain-2026-10-24}, \url{https://doi.org/10.5281/zenodo.24150837}.
 
 \bibitem{BrainFramework} Y.~Shmalo, \emph{Brain Framework}, public software repository, 2026, \url{https://github.com/yspennstate/brain-framework-public}.
 
