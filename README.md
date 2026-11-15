@@ -2,7 +2,8 @@
 
 Yitzchak Shmalo
 
-Paper: [paper/main.pdf](paper/main.pdf) (LaTeX source in `paper/main.tex`).
+Paper: [paper/main.pdf](paper/main.pdf) (LaTeX source in `paper/main.tex`). Archived at Zenodo,
+[doi:10.5281/zenodo.24257131](https://doi.org/10.5281/zenodo.24257131).
 
 Aldous and Fill (Reversible Markov Chains and Random Walks on Graphs, Section 12.1.11) consider a chain on K binary
 words of length L: at each step the words are paired at random, and within each pair every letter position is
