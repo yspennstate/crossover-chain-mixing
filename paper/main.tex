@@ -1,0 +1,262 @@
+\documentclass[11pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm,mathtools,enumitem}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url,booktabs}
+\renewcommand{\UrlBreaks}{\do\/\do-}
+\raggedbottom
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\TV}{d_{\mathrm{TV}}}
+\newcommand{\Pm}{\mathbf P}
+\newcommand{\E}{\mathbf E}
+
+\hypersetup{pdftitle={Mixing of the Aldous-Fill crossover chain via random switching networks},pdfauthor={Yitzchak Shmalo}}
+
+\title[Mixing of the crossover chain]{Mixing of the Aldous--Fill crossover chain via random switching networks}
+\author{Yitzchak Shmalo}
+\address{Einstein Institute of Mathematics, The Hebrew University of Jerusalem, Jerusalem, Israel}
+\email{yitzchak.shmalo@gmail.com}
+\date{15 November 2026}
+\subjclass[2020]{60J10, 68R05, 92D15}
+\keywords{Markov chain mixing time, genetic algorithm, crossover, switching network, Dobrushin coefficient}
+
+\begin{document}
+\begin{abstract}
+Aldous and Fill consider a chain on $K$ binary words of length $L$: at each step the words are paired at random, and within each pair every letter position is exchanged with probability $1/2$. They prove that it mixes in $O(K\log L)$ steps and ask for $O(\log K\cdot\log L)$. We show that it mixes in $O(\log K+\log L)$ steps. Given the pairings, the letter positions evolve independently, each pushed through the same random switching network, and Czumaj proved that almost every such network of logarithmic depth shuffles every $0$--$1$ vector almost uniformly. We also prove the lower bounds $\log_2\min(K,L)-3$ and, for fixed $K\ge4$, a constant times $\log L$.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+Fix integers $K,L\ge1$ with $K$ even. Section~12.1.11 of Aldous and Fill \cite{AF} studies the following Markov chain. A state is a family of words $x=(x^k)_{1\le k\le K}$, each word a binary $L$-tuple $x^k=(x^k_l)_{1\le l\le L}$. A step chooses a uniform random permutation $\pi$ of $\{1,\dots,K\}$ and, for $1\le i\le K/2$, creates two new words $y^{2i-1},y^{2i}$ from the pair $\{x^{\pi(2i-1)},x^{\pi(2i)}\}$ by setting, independently for each $l$ and each $i$, $(y^{2i-1}_l,y^{2i}_l)$ equal to $(x^{\pi(2i-1)}_l,x^{\pi(2i)}_l)$ or to $(x^{\pi(2i)}_l,x^{\pi(2i-1)}_l)$ with probability $1/2$ each \cite[(12.13)]{AF}. The new state is $(y^k)$. We call this the crossover chain. In a variant the new words keep the labels of the old ones: the pair $\{x^i,x^j\}$ is replaced by $y^i,y^j$ with $(y^i_l,y^j_l)$ equal to $(x^i_l,x^j_l)$ or $(x^j_l,x^i_l)$. Every result below holds for both versions (Lemma~\ref{lem:columns}).
+
+We picture a state as a $K\times L$ matrix of zeros and ones whose rows are the words, and write $x_l\in\{0,1\}^K$ for its $l$th column. The column sums $m_l=\sum_k x^k_l$ are preserved. Write $m=(m_l)_{l\le L}$ and $I_m$ for the set of states with column sums $m$. The transition matrix is symmetric, so the chain restricted to $I_m$ has the uniform stationary law $U_m$ \cite{AF}. For a state $x$ write $X_t$ for the chain started at $x$ and
+\begin{equation}\label{eq:d}
+d(t)=\max_{x\in I_m}\TV\bigl(\Pm_x(X_t\in\cdot),U_m\bigr),\qquad \bar d(t)=\max_{x,y\in I_m}\TV\bigl(\Pm_x(X_t\in\cdot),\Pm_y(X_t\in\cdot)\bigr),
+\end{equation}
+where $\TV(\mu,\mu')=\max_A|\mu(A)-\mu'(A)|$ for probability measures $\mu,\mu'$, and let $\tau_1^{\mathrm{disc}}=\min\{t:\bar d(t)\le e^{-1}\}$. Since $d(t)\le\bar d(t)\le 2d(t)$, a bound on $d$ bounds $\tau_1^{\mathrm{disc}}$ up to a constant factor.
+
+By a coupling in which each column is matched separately, Aldous and Fill prove $\tau_1^{\mathrm{disc}}=O(K\log L)$, uniformly in $m$, and pose the following question \cite[Open Problem~12.5]{AF}: show that $\tau_1^{\mathrm{disc}}=O(\log K\cdot\log L)$. The bottleneck of the coupling is the last two unmatched words in a column, which are paired with each other with probability $1/(K-1)$ per step. They expect $\log K$ for a single column by analogy with the random transpositions shuffle \cite{DS81}.
+
+\begin{theorem}\label{thm:upper}
+There is an absolute constant $C$ such that for all even $K\ge2$, all $L\ge1$, all column sums $m$ and all $\varepsilon\in(0,1)$,
+\[
+d(t)\le\varepsilon\qquad\text{whenever}\qquad t\ge C\bigl(\log K+\log(L/\varepsilon)\bigr).
+\]
+In particular $\tau_1^{\mathrm{disc}}=O(\log K+\log L)$, which is $O(\log K\cdot\log L)$ for $K,L\ge3$.
+\end{theorem}
+
+By Theorem~\ref{thm:lower} below, this bound has the right order when $K\ge4$ is fixed and $L\to\infty$, and when $K\le L\le K^{A}$ for a fixed $A\ge1$.
+
+\begin{theorem}\label{thm:lower}
+Let $K\ge2$ be even and $L\ge1$.
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item There are column sums $m$ and a state $x\in I_m$ with $\TV(\Pm_x(X_t\in\cdot),U_m)\ge3/7$ for every $t\le\log_2(\min(K,L)/8)$. Hence $\tau_1^{\mathrm{disc}}\ge\log_2\min(K,L)-3$.
+\item If $K\ge4$, there are column sums $m$ and a state $x\in I_m$ with $\TV(\Pm_x(X_t\in\cdot),U_m)\ge1/2$ for every $t\le K^{-1}\log_2\bigl(L/(K^2(K-1)^2)\bigr)$.
+\item If $K=2$, then $\Pm_x(X_1\in\cdot)=U_m$ for every $x$ and every $L$.
+\end{enumerate}
+\end{theorem}
+
+The upper bound rests on the work of Czumaj \cite{Cz15} on random switching networks, whose layers are uniform random perfect matchings and whose switches are fair coins. Czumaj proved that almost every such network of logarithmic depth shuffles every $0$--$1$ vector almost uniformly; the theorem and the expansion property behind it are his. This paper reduces the crossover chain to these networks. Once the pairings are fixed, the letters in different positions are exchanged by independent coins, so the columns evolve independently, and each column is a $0$--$1$ vector pushed through the network formed by the pairings. Successive blocks of steps use independent pairings, and their networks are combined with the contraction coefficient of Dobrushin \cite{Do56}. The coupling of Aldous and Fill also treats the columns one at a time, but couples each column through its own unmatched words; replacing that coupling by Czumaj's theorem for the whole network of a block removes the factor $K$. Aldous and Fill had expected $\log K$ for a single column from the random transpositions shuffle of Diaconis and Shahshahani \cite{DS81}; Czumaj's theorem gives it.
+
+Averaged over the pairings, a single column is shuffled by exchanges between random pairs of positions with fresh random choices at every step. Czumaj and Kuty{\l}owski \cite{CK00} showed by delayed path coupling that a distributed shuffle of this kind generates a nearly uniform permutation of $n$ items in $\Theta(\log n)$ rounds. The columns of the crossover chain share their pairings, so a bound averaged over the pairings does not apply to them jointly, and the theorem of \cite{Cz15} for a fixed good network is needed. Infinite-population versions of recombination, in which the state is a distribution on $\{0,1\}^L$ evolving by a quadratic map, were studied by Rabani, Rabinovich and Sinclair \cite{RRS98} and by Caputo and Sinclair \cite{CS18}; the chain studied here is a finite population of $K$ words.
+
+Section~\ref{sec:upper} proves Theorem~\ref{thm:upper} and Section~\ref{sec:lower} proves Theorem~\ref{thm:lower}. Appendix~\ref{app:notation} lists the notation.
+
+\section{The upper bound}\label{sec:upper}
+
+We first reduce the chain to its columns given the pairings, then reduce a long run to independent blocks of steps, and finally bound one block with the theorems of Czumaj.
+
+\subsection{Columns given the pairings}
+A perfect matching of $\{1,\dots,K\}$ is a set of $K/2$ disjoint pairs covering $\{1,\dots,K\}$. For a permutation $\sigma$ of $\{1,\dots,K\}$ and a perfect matching $M$ write $\sigma(M)=\{\{\sigma(i),\sigma(j)\}:\{i,j\}\in M\}$. The permutation $\pi$ of a step determines the matching $\{\{\pi(2i-1),\pi(2i)\}:1\le i\le K/2\}$, which is a uniform random perfect matching. Write $\pi_1,\pi_2,\dots$ for the permutations used at successive steps; they are independent.
+
+For $0\le s\le K$ let $\Omega_s\subseteq\{0,1\}^K$ be the set of vectors with $s$ ones and $u_s$ the uniform law on $\Omega_s$. For a perfect matching $M$, let $P_M$ be the transition matrix on $\Omega_s$ that exchanges the two entries of each pair of $M$ independently with probability $1/2$. It is the average, over the $2^{K/2}$ choices of which pairs to exchange, of the matrices of the corresponding permutations, each a product of disjoint transpositions and hence an involution, so $P_M$ is symmetric and $u_s P_M=u_s$. For a finite sequence $\mathbf M=(M_1,\dots,M_r)$ write $P_{\mathbf M}=P_{M_1}\cdots P_{M_r}$. For a permutation $\sigma$ let $Q_\sigma$ be the matrix on $\Omega_s$ that moves the entry in position $j$ to position $\sigma(j)$ for every $j$. Then $u_sQ_\sigma=u_s$, and moving entries before or after the exchanges gives
+\begin{equation}\label{eq:conj}
+P_MQ_\sigma=Q_\sigma P_{\sigma(M)}.
+\end{equation}
+
+\begin{lemma}\label{lem:columns}
+Let $x\in I_m$ and $t\ge1$. There are independent uniform random perfect matchings $M_1,\dots,M_t$, functions of $\pi_1,\dots,\pi_t$, such that
+\[
+\TV\bigl(\Pm_x(X_t\in\cdot),U_m\bigr)\le\sum_{l=1}^L\E\,\TV\bigl(\delta_{x_l}P_{(M_1,\dots,M_t)},u_{m_l}\bigr).
+\]
+The same holds for the variant in which the new words keep the labels of the old ones.
+\end{lemma}
+
+\begin{proof}
+Let $N_k=\{\{\pi_k(2i-1),\pi_k(2i)\}\}$ be the matching of step $k$ and $\sigma_k=\pi_k^{-1}$. Within a pair of $N_k$ the two letters in position $l$ are exchanged or not by a fair coin, and the word at index $\pi_k(j)$ then receives the index $j$; on a column this is the matrix $P_{N_k}Q_{\sigma_k}$. Given $\pi_1,\dots,\pi_t$ the coins of different positions $l$ are independent, and the $l$th column of $X_t$ depends only on $x_l$, the permutations and the coins of position $l$. So, given the permutations, the columns of $X_t$ are independent and the $l$th has law
+\[
+\lambda_l=\delta_{x_l}P_{N_1}Q_{\sigma_1}P_{N_2}Q_{\sigma_2}\cdots P_{N_t}Q_{\sigma_t}=\delta_{x_l}P_{(M_1,\dots,M_t)}Q_{\theta_t}\quad\text{on }\Omega_{m_l},
+\]
+where $\theta_0$ is the identity, $\theta_k=\sigma_k\circ\theta_{k-1}$, so that $Q_{\sigma_1}\cdots Q_{\sigma_k}=Q_{\theta_k}$, and $M_k=\theta_{k-1}^{-1}(N_k)$; the second equality follows by moving each $Q$ to the right with \eqref{eq:conj}, used in the form $Q_\theta P_N=P_{\theta^{-1}(N)}Q_\theta$. Given $\pi_1,\dots,\pi_{k-1}$, the matching $N_k$ is uniform and independent of them, and so is its image under the permutation $\theta_{k-1}^{-1}$ that they determine; hence $M_1,\dots,M_t$ are independent and uniform. Since $u_sQ_\theta=u_s$ and $Q_\theta$ is a bijection of $\Omega_s$, $\TV(\lambda_l,u_{m_l})=\TV(\delta_{x_l}P_{(M_1,\dots,M_t)},u_{m_l})$. The law $U_m$ is the product $u_{m_1}\otimes\cdots\otimes u_{m_L}$. Averaging over the permutations and using convexity of $\TV$ in its first argument,
+\[
+\TV\bigl(\Pm_x(X_t\in\cdot),U_m\bigr)\le\E\,\TV\bigl(\lambda_1\otimes\cdots\otimes\lambda_L,u_{m_1}\otimes\cdots\otimes u_{m_L}\bigr)\le\E\sum_{l=1}^L\TV(\lambda_l,u_{m_l}),
+\]
+the last step by coupling the factors independently, each optimally. In the variant every $Q_{\sigma_k}$ is omitted and $M_k=N_k$.
+\end{proof}
+
+\subsection{Blocks and the Dobrushin coefficient}\label{subsec:blocks}
+For a transition matrix $P$ on a finite set $\Omega$ let
+\[
+\delta(P)=\max_{\omega,\omega'\in\Omega}\TV\bigl(P(\omega,\cdot),P(\omega',\cdot)\bigr)
+\]
+be its Dobrushin coefficient \cite{Do56}. For probability measures $\mu,\mu'$ on $\Omega$ one has $\TV(\mu P,\mu' P)\le\delta(P)\,\TV(\mu,\mu')$, and hence $\delta(PQ)\le\delta(P)\delta(Q)$. (Couple $\mu$ and $\mu'$ optimally, then run from the two coupled points a coupling of the two rows of $P$ that differs with probability at most $\delta(P)$.)
+
+Fix $T\ge1$. For $t\ge T$ write $t=rT+t'$ with $r=\lfloor t/T\rfloor$, and split $(M_1,\dots,M_t)$ into the blocks $\mathbf M^{(b)}=(M_{(b-1)T+1},\dots,M_{bT})$ for $1\le b\le r$ and a remainder $\mathbf M'$ of length $t'$. Since $u_s$ is invariant for every $P_M$,
+\[
+\TV\bigl(\delta_{x_l}P_{(M_1,\dots,M_t)},u_{m_l}\bigr)\le\TV\bigl(\delta_{x_l}P_{\mathbf M^{(1)}}\cdots P_{\mathbf M^{(r)}},u_{m_l}\bigr)\le\prod_{b=1}^r\delta_{m_l}\bigl(P_{\mathbf M^{(b)}}\bigr),
+\]
+where $\delta_s$ denotes the Dobrushin coefficient on $\Omega_s$; the first inequality uses $\TV(\mu P_{\mathbf M'},u_s P_{\mathbf M'})\le\TV(\mu,u_s)$. The blocks are independent and identically distributed, so with
+\begin{equation}\label{eq:rho}
+\rho_K(T)=\max_{0\le s\le K}\E\,\delta_s\bigl(P_{(M_1,\dots,M_T)}\bigr)
+\end{equation}
+Lemma~\ref{lem:columns} gives
+\begin{equation}\label{eq:main}
+d(t)\le L\,\rho_K(T)^{\lfloor t/T\rfloor}\qquad(t\ge T).
+\end{equation}
+It remains to make $\rho_K(T)$ small.
+
+\subsection{Switching networks}\label{subsec:networks}
+In the terminology of Czumaj \cite{Cz15}, a sequence $\mathbf M=(M_1,\dots,M_T)$ of perfect matchings of $\{1,\dots,n\}$, $n$ even, defines a switching network of depth $T$, and the random shuffling process on it takes $n$ input items and, for each $t$ and each pair $\{i,j\}\in M_t$, exchanges the items at positions $i$ and $j$ independently with probability $1/2$ \cite[Section~1.1]{Cz15}. Applied to $x\in\Omega_s$ with $n=K$, its output has law $\delta_x P_{\mathbf M}$ in our notation. ``Almost every network'' refers to all but a small fraction of the sequences $\mathbf M$, that is, to a uniform random choice of $M_1,\dots,M_T$, independent \cite[Section~1.1 and Theorem~3.5]{Cz15}.
+
+Czumaj defines when a network is \emph{good}, a condition on expansion of the graphs formed by consecutive layers \cite[Section~2.2]{Cz15}, and proves the following two facts; the polynomial rates hold for every fixed exponent \cite[footnotes 2 and 3]{Cz15}.
+\begin{enumerate}[label=(\roman*)]
+\item All but an $O(n^{-2})$ fraction of switching networks of logarithmic depth are good \cite[Proposition~2.3]{Cz15}.
+\item For every constant $c_1$ there is a constant $c$ such that for every good network of depth $T\ge c\log n$, every $s$ with $0\le s\le n$ and every input with $s$ ones and $n-s$ zeros, the law of the output is within total variation distance $O(n^{-c_1})$ of the uniform law on such vectors \cite[Theorem~3.7]{Cz15}.
+\end{enumerate}
+Statement (ii) also follows from Czumaj's theorem on partial permutations \cite[Theorem~3.4]{Cz15}: for $k\ge\alpha n$ with a fixed $\alpha>0$, a good network of depth at least $c\log n$ carries every sequence of $k$ zeros and $n-k$ distinct nonzero labels to within $O(n^{-c_1})$ of the uniform law on such sequences. Exchanging the roles of $0$ and $1$ if necessary, we may take $s\le n/2$. Give the $s$ ones of the input distinct labels, so that it becomes a sequence with $k=n-s\ge n/2$ zeros. The switches act on positions, so they commute with the map that sends every nonzero label to $1$; this map carries the uniform law on the labelled sequences to $u_s$, and total variation does not increase under a map.
+
+\begin{lemma}\label{lem:rho}
+\leavevmode
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item There are absolute constants $c_0$, $C_0$ and $K_0$ such that for every even $K\ge K_0$, with $T_K=\lceil c_0\log K\rceil$, $\rho_K(T_K)\le C_0K^{-2}\le K^{-1}$.
+\item For every even $K\ge2$, $\rho_K\bigl((K-1)^2\bigr)<1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Take $n=K$ and $c_1=2$ in (ii), and let $c_0\ge c$. For a good network of depth $T_K$, (ii) and the triangle inequality give $\delta_s(P_{\mathbf M})\le2\max_{x\in\Omega_s}\TV(\delta_xP_{\mathbf M},u_s)=O(K^{-2})$, uniformly in $s$. By (i) the network is not good with probability $O(K^{-2})$, in which case $\delta_s\le1$. Hence $\E\,\delta_s(P_{\mathbf M})\le C_0K^{-2}$ for all $s$, and $C_0K^{-2}\le K^{-1}$ once $K\ge C_0$.
+
+(b) Fix $s$. It suffices to find one sequence $\mathbf M$ of length $(K-1)^2$ with $\delta_s(P_{\mathbf M})<1$, since it has positive probability and $\delta_s\le1$ always. The edges of the complete graph on $\{1,\dots,K\}$ split into $K-1$ perfect matchings $F_1,\dots,F_{K-1}$. Let $\mathbf M$ list $F_1,\dots,F_{K-1}$ in this order, $K-1$ times. Fix $\omega^*\in\Omega_s$. Every $\omega\in\Omega_s$ is carried to $\omega^*$ by a product of at most $K-1$ transpositions $\tau_1,\dots,\tau_q$. Each $\tau_i$ belongs to some $F_j$, and the $i$th round of $\mathbf M$ contains $F_j$; exchanging only that pair in that layer of the $i$th round, and no pair elsewhere, is a choice of positive probability and carries $\omega$ to $\omega^*$. Thus $P_{\mathbf M}(\omega,\omega^*)>0$ for every $\omega$, so any two rows of $P_{\mathbf M}$ overlap and $\delta_s(P_{\mathbf M})<1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:upper}]
+For $K\ge K_0$, \eqref{eq:main} with $T=T_K$ and Lemma~\ref{lem:rho}(a) give $d(t)\le L\,K^{-\lfloor t/T_K\rfloor}$. This is at most $\varepsilon$ as soon as $\lfloor t/T_K\rfloor\ge\log(L/\varepsilon)/\log K$, which holds when
+\[
+t\ge T_K\Bigl(1+\frac{\log(L/\varepsilon)}{\log K}\Bigr).
+\] Since $T_K\le c_0\log K+1$ and $\log K\ge\log 2$, this is implied by $t\ge C(\log K+\log(L/\varepsilon))$ for a suitable absolute $C$. For the finitely many even $K<K_0$, \eqref{eq:main} with $T=(K-1)^2$ and Lemma~\ref{lem:rho}(b) give $d(t)\le\varepsilon$ once $t\ge(K-1)^2\bigl(1+\log(L/\varepsilon)/\log(1/\rho_K((K-1)^2))\bigr)$. The right side is at most $C'(1+\log(L/\varepsilon))$ for a constant $C'$ depending only on $K_0$, and $1\le\log K/\log2$. The last claim of the theorem follows from $\bar d\le2d$.
+\end{proof}
+
+\begin{remark}\label{rem:single}
+For $L=1$ Theorem~\ref{thm:upper} gives $O(\log K)$, the order Aldous and Fill expect for a single position \cite{AF}. The lower bound of Theorem~\ref{thm:lower}(a) does not reach this case: averaged over the pairings, a single $1$ in a single column is spread nearly uniformly after a bounded number of steps, and a lower bound of order $\log K$ for $L=1$ would have to come from columns with many ones.
+\end{remark}
+
+\section{Lower bounds}\label{sec:lower}
+
+The proofs use only that, given the permutations $\pi_1,\pi_2,\dots$, a step sends the letter of each word in each position to one of two words determined by the permutation, by a fair coin, with independent coins for different positions; so they apply to both versions of the chain.
+
+\begin{proof}[Proof of Theorem~\ref{thm:lower}]
+(a) Let $L'=\min(K,L)$ and let $x$ have $x^1_l=1$ for all $l$ and all other entries $0$, so $m_l=1$ for all $l$. Given $\pi_1,\dots,\pi_t$, let $S_0=\{1\}$ and let $S_i$ be the set of the two words to which a step sends the letters of a word in $S_{i-1}$, over all words in $S_{i-1}$; then $|S_t|\le2^t$, and every $1$ of $X_t$ lies in a word of $S_t$. Let $N$ be the number of distinct words that carry the $1$ of one of the columns $1,\dots,L'$. Under the chain $N\le2^t$ surely. Under $U_m$ the positions of the ones of different columns are independent and uniform, and $L'-N$ is at most the number of pairs of columns among the first $L'$ whose ones lie in the same word, so $\E_{U_m}(L'-N)\le\binom{L'}2/K\le L'/2$, and by Markov's inequality $U_m(N\le L'/8)\le U_m(L'-N\ge 7L'/8)\le4/7$. If $2^t\le L'/8$ the event $\{N\le L'/8\}$ has probability $1$ under the chain, so $\TV\ge3/7>e^{-1}$.
+
+(b) Let every column of $x$ have ones exactly in words $1$ and $2$, so $m_l=2$ for all $l$. Let $Y_l$ be the indicator that the $l$th column of $X_t$ has its ones in words $1$ and $2$, and $F=L^{-1}\sum_lY_l$. Given $\pi_1,\dots,\pi_t$, the $Y_l$ are independent and identically distributed with mean $p$, a function of $\pi_1,\dots,\pi_t$, and $p$ is an integer multiple of $2^{-tK/2}$, since each step uses $K/2$ fair coins per column. Under $U_m$ the $Y_l$ are independent with mean $q=\binom K2^{-1}$. As $K-1\ge3$ is odd, $\binom K2$ does not divide a power of $2$, so $p\ne q$ and
+\[
+|p-q|\ge\Delta:=\binom K2^{-1}2^{-tK/2}.
+\]
+Let $A=\{|F-q|\ge\Delta/2\}$. Under $U_m$, Chebyshev's inequality gives $U_m(A)\le4q/(L\Delta^2)\le1/(L\Delta^2)$. Under the chain, on $A^c$ we have $|F-p|>\Delta/2$, which has conditional probability at most $4p(1-p)/(L\Delta^2)\le1/(L\Delta^2)$ given $\pi_1,\dots,\pi_t$. Hence $\TV\ge1-2/(L\Delta^2)=1-K^2(K-1)^22^{tK}/(2L)$, which is at least $1/2$ when $2^{tK}\le L/(K^2(K-1)^2)$.
+
+(c) For $K=2$ the only pairing is $\{1,2\}$, and each column is exchanged by its own fair coin. A column with $m_l\in\{0,2\}$ has one possible value, and a column with $m_l=1$ becomes uniform on its two values after one step, independently of the other columns.
+\end{proof}
+
+For fixed $K\ge4$, part (b) and Theorem~\ref{thm:upper} together show that $\tau_1^{\mathrm{disc}}/\log L$ stays between two positive constants depending on $K$ as $L\to\infty$.
+
+\section*{Acknowledgments}
+This work was done by AI agents, Claude (Anthropic) and Codex (OpenAI), connected to Math Brain \cite{MathBrainRepo,MathBrainPaper} and working inside the Brain framework \cite{BrainFramework}. The question came from the list of open problems that these agents maintain.
+
+\section*{Funding}
+The research presented in this paper was supported by the European Research
+Council (ERC) under the European Union's Horizon Europe research and
+innovation programme (grant agreement No.~101041711), by the Simons
+Foundation as part of the Collaboration on the Mathematical and Scientific
+Foundations of Deep Learning, by Heights Labs and by Convex Nexus Capital.
+It was also supported by the Israel Science Foundation (grant number
+2258/19) and by the Israel Science Foundation (ISF Grant 4101/25). Computational resources were
+provided in part by Google Cloud through its education credits programme
+(credit 530550103).
+
+\section*{Declaration of competing interest}
+The author holds equity in Heights Labs and in Convex Nexus Capital and
+has a management role at Convex Nexus Capital. These entities are included
+in the funding declaration above.
+
+\section*{Declaration of generative AI and AI-assisted technologies}
+The chain and the question are due to Aldous and Fill \cite{AF}, the switching-network theorems to Czumaj \cite{Cz15} and the contraction coefficient to Dobrushin \cite{Do56}. In October 2026 Codex (OpenAI) gave an argument for the same bound by a different method, not used here. In November 2026 Claude Opus~5.5 (Anthropic), working in Claude Code and connected to Math Brain~\cite{MathBrainRepo}, found the reduction to switching networks and the proofs of Theorems~\ref{thm:upper} and~\ref{thm:lower} and wrote the paper. Math Brain runs inside the Brain framework~\cite{BrainFramework}, a shared, persistent memory in which AI agents record claims, proofs, failed attempts and methods and audit each other's work; it is described in \cite{MathBrainPaper}. The author directed the work and is responsible for the content of the paper and for decisions concerning its dissemination.
+
+\section*{Data availability}
+No data were used in this work. The source of the paper is at \url{https://github.com/yspennstate/crossover-chain-mixing}.
+
+\appendix
+\section{Notation}\label{app:notation}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.20\textwidth}p{0.48\textwidth}p{0.24\textwidth}}
+\toprule
+Symbol & Meaning & Defined in\\\midrule
+$K$, $L$ & number of words ($K$ even); length of a word & Section~\ref{sec:intro}, par.~1\\
+$x$, $x^k$, $x^k_l$ & a state; its $k$th word; the $l$th letter of that word & Section~\ref{sec:intro}, par.~1\\
+$\pi$, $y^i$, $y^j$ & the permutation of a step; two new words made from a pair & Section~\ref{sec:intro}, par.~1\\
+$x_l$ & the $l$th column of $x$, in $\{0,1\}^K$ & Section~\ref{sec:intro}, par.~2\\
+$m_l$, $m$, $I_m$ & column sums; their vector; the states with column sums $m$ & Section~\ref{sec:intro}, par.~2\\
+$U_m$ & the uniform law on $I_m$ & Section~\ref{sec:intro}, par.~2\\
+$X_t$, $\Pm_x$, $\E$ & the chain at time $t$; its law from $x$; expectation & Section~\ref{sec:intro}, par.~2\\
+$\TV$, $\mu$, $\mu'$ & total variation distance; two probability measures & \eqref{eq:d}\\
+$d(t)$, $\bar d(t)$, $\tau_1^{\mathrm{disc}}$ & distance to $U_m$; distance between two starts; the variation threshold & \eqref{eq:d}\\
+$\varepsilon$, $C$ & a target distance; an absolute constant & Theorem~\ref{thm:upper}\\
+$\pi_k$, $N_k$, $\sigma(M)$ & the permutation of step $k$; its matching; the image of a matching & Section~\ref{sec:upper}, par.~1\\
+$s$, $\Omega_s$, $u_s$ & a number of ones; $0$--$1$ vectors with $s$ ones; the uniform law on them & Section~\ref{sec:upper}, par.~2\\
+$P_M$, $\mathbf M$, $P_{\mathbf M}$ & one exchange step for matching $M$; a sequence of matchings; the product along it & Section~\ref{sec:upper}, par.~2\\
+$Q_\sigma$ & moving entries by a permutation $\sigma$ & \eqref{eq:conj}\\
+$\lambda_l$, $\sigma_k$, $\theta_k$, $M_k$ & law of the $l$th column given $\pi_1,\dots,\pi_t$; $\pi_k^{-1}$; $\sigma_k\circ\dots\circ\sigma_1$; the matching $\theta_{k-1}^{-1}(N_k)$ & proof of Lemma~\ref{lem:columns}\\
+$\delta$, $\delta_s$ & Dobrushin coefficient; the same on $\Omega_s$ & Section~\ref{subsec:blocks}\\
+$T$, $r$, $t'$, $\mathbf M^{(b)}$, $\mathbf M'$ & block length; number of blocks; remainder; the $b$th block; the remainder block & Section~\ref{subsec:blocks}\\
+$\rho_K(T)$ & largest mean Dobrushin coefficient of a block & \eqref{eq:rho}\\
+$n$, $c$, $c_1$, $k$, $\alpha$ & Czumaj's network size, depth constant and error exponent; a number of zeros; its least proportion & Section~\ref{subsec:networks}\\
+$c_0$, $C_0$, $K_0$, $T_K$ & constants of Lemma~\ref{lem:rho}; the block length $\lceil c_0\log K\rceil$ & Lemma~\ref{lem:rho}\\
+$F_j$, $\omega$, $\omega^*$, $\tau_i$ & a $1$-factorization of the complete graph; vectors in $\Omega_s$; transpositions & proof of Lemma~\ref{lem:rho}\\
+$L'$, $S_i$, $N$ & $\min(K,L)$; words that can hold a letter of word $1$ after $i$ steps; number of words carrying a $1$ & proof of Theorem~\ref{thm:lower}(a)\\
+$Y_l$, $F$, $p$, $q$, $\Delta$, $A$ & indicators; their mean; its conditional and uniform means; the gap; the test event & proof of Theorem~\ref{thm:lower}(b)\\\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{thebibliography}{99}
+
+\bibitem{AF} D.~Aldous and J.~A.~Fill, \emph{Reversible Markov Chains and Random Walks on Graphs}, unfinished monograph, 2002 (recompiled 2014), Chapter~12, Section~12.1.11, \url{https://www.stat.berkeley.edu/~aldous/RWG/book.html}.
+
+\bibitem{Cz15} A.~Czumaj, Random permutations using switching networks, in \emph{Proceedings of the 47th Annual ACM Symposium on Theory of Computing (STOC 2015)}, ACM, 2015, pp.~703--712, \url{https://doi.org/10.1145/2746539.2746629}.
+
+\bibitem{CK00} A.~Czumaj and M.~Kuty{\l}owski, Delayed path coupling and generating random permutations, \emph{Random Structures Algorithms} \textbf{17} (2000), 238--259, \url{https://doi.org/10.1002/1098-2418(200010/12)17:3/4<238::AID-RSA4>3.0.CO;2-E}.
+
+\bibitem{CS18} P.~Caputo and A.~Sinclair, Entropy production in nonlinear recombination models, \emph{Bernoulli} \textbf{24} (2018), 3246--3282, \url{https://doi.org/10.3150/17-BEJ959}.
+
+\bibitem{RRS98} Y.~Rabani, Y.~Rabinovich and A.~Sinclair, A computational view of population genetics, \emph{Random Structures Algorithms} \textbf{12} (1998), 313--334, \url{https://doi.org/10.1002/(SICI)1098-2418(199807)12:4<313::AID-RSA1>3.0.CO;2-W}.
+
+\bibitem{DS81} P.~Diaconis and M.~Shahshahani, Generating a random permutation with random transpositions, \emph{Z. Wahrsch. Verw. Gebiete} \textbf{57} (1981), 159--179, \url{https://doi.org/10.1007/BF00535487}.
+
+\bibitem{Do56} R.~L.~Dobrushin, Central limit theorem for nonstationary Markov chains.~I, II, \emph{Theory Probab. Appl.} \textbf{1} (1956), 65--80 and 329--383, \url{https://doi.org/10.1137/1101006} and \url{https://doi.org/10.1137/1101029}.
+
+\bibitem{MathBrainRepo} Y.~Shmalo, \emph{Math Brain: public snapshot, code and tests}, 2026, \url{https://github.com/yspennstate/math-brain-public/tree/5740d6238014124ca7137b6f9e9d056739890725}.
+
+\bibitem{MathBrainPaper} Y.~Shmalo, \emph{Math Brain: shared, auditable memory for multi-agent mathematical research}, October 2026, \url{https://github.com/yspennstate/math-brain-public/tree/5740d6238014124ca7137b6f9e9d056739890725/papers/math-brain-2026-10-24}.
+
+\bibitem{BrainFramework} Y.~Shmalo, \emph{Brain Framework}, public software repository, 2026, \url{https://github.com/yspennstate/brain-framework-public}.
+
+\end{thebibliography}
+\end{document}
